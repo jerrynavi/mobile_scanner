@@ -18,6 +18,9 @@ import dev.steenbakker.mobile_scanner.objects.DetectionSpeed
 import dev.steenbakker.mobile_scanner.objects.MobileScannerStartParameters
 import io.flutter.view.TextureRegistry
 import kotlin.math.roundToInt
+import androidx.camera.core.MeteringPoint;
+import androidx.camera.core.SurfaceOrientedMeteringPointFactory;
+import java.util.concurrent.TimeUnit
 
 class MobileScanner(
     private val activity: Activity,
@@ -194,6 +197,14 @@ class MobileScanner(
                 preview,
                 analysis
             )
+
+            val autoFocusPoint: MeteringPoint = SurfaceOrientedMeteringPointFactory(1f, 1f)
+                        .createPoint(.5f, .5f);
+                val autoFocusAction: FocusMeteringAction = FocusMeteringAction.Builder(
+                        autoFocusPoint,
+                        FocusMeteringAction.FLAG_AF).setAutoCancelDuration(2, TimeUnit.SECONDS)
+                        .build();
+                camera!!.cameraControl.startFocusAndMetering(autoFocusAction);
 
             // Register the torch listener
             camera!!.cameraInfo.torchState.observe(activity) { state ->
