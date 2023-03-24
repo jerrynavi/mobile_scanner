@@ -21,6 +21,7 @@ import kotlin.math.roundToInt
 import androidx.camera.core.MeteringPoint;
 import androidx.camera.core.SurfaceOrientedMeteringPointFactory;
 import java.util.concurrent.TimeUnit
+import android.util.Size;
 
 class MobileScanner(
     private val activity: Activity,
