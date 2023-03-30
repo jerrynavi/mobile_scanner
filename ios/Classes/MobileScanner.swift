@@ -120,29 +120,21 @@ public class MobileScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
         scanner = barcodeScannerOptions != nil ? BarcodeScanner.barcodeScanner(options: barcodeScannerOptions!) : BarcodeScanner.barcodeScanner()
         captureSession = AVCaptureSession()
         textureId = registry?.register(self)
+        
+        device = AVCaptureDevice.default(for: AVMediaType.video)
 
         // Open the camera device
-        if #available(iOS 13.0, *) {
-            device = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTripleCamera, .builtInDualWideCamera, .builtInDualCamera, .builtInWideAngleCamera], mediaType: .video, position: cameraPosition).devices.first
-        } else {
-            device = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInDualCamera, .builtInWideAngleCamera], mediaType: .video, position: cameraPosition).devices.first
-        }
+//        if #available(iOS 13.0, *) {
+//            device = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTripleCamera, .builtInDualWideCamera, .builtInDualCamera, .builtInWideAngleCamera], mediaType: .video, position: cameraPosition).devices.first
+//        } else {
+//            device = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInDualCamera, .builtInWideAngleCamera], mediaType: .video, position: cameraPosition).devices.first
+//        }
 
         if (device == nil) {
             throw MobileScannerError.noCamera
         }
 
         device.addObserver(self, forKeyPath: #keyPath(AVCaptureDevice.torchMode), options: .new, context: nil)
-        do {
-            try device.lockForConfiguration()
-            if device.isFocusModeSupported(.continuousAutoFocus) {
-                device.focusMode = .continuousAutoFocus
-            }
-            if #available(iOS 15.4, *) , device.isFocusModeSupported(.autoFocus){
-                device.automaticallyAdjustsFaceDrivenAutoFocusEnabled = false
-            }
-            device.unlockForConfiguration()
-        } catch {}
 
         captureSession.beginConfiguration()
 
@@ -154,7 +146,7 @@ public class MobileScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
             throw MobileScannerError.cameraError(error)
         }
 
-        captureSession.sessionPreset = AVCaptureSession.Preset.photo;
+        captureSession.sessionPreset = AVCaptureSession.Preset.hd1920x1080;
         // Add video output.
         let videoOutput = AVCaptureVideoDataOutput()
 
