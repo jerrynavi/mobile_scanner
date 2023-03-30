@@ -154,7 +154,7 @@ public class MobileScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
             throw MobileScannerError.cameraError(error)
         }
 
-        captureSession.sessionPreset = AVCaptureSession.Preset.photo;
+        captureSession.sessionPreset = AVCaptureSession.Preset.hd1920x1080;
         // Add video output.
         let videoOutput = AVCaptureVideoDataOutput()
 
