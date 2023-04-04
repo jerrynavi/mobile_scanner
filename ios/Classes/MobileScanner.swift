@@ -164,6 +164,17 @@ public class MobileScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
                 connection.isVideoMirrored = true
             }
         }
+        do {
+                    try device.lockForConfiguration()
+                    if device.isFocusModeSupported(.continuousAutoFocus) {
+                        device.focusMode = .continuousAutoFocus
+                    }
+                    if #available(iOS 15.4, *) , device.isFocusModeSupported(.autoFocus){
+                        device.automaticallyAdjustsFaceDrivenAutoFocusEnabled = false
+                    }
+                    device.unlockForConfiguration()
+                } catch {}
+        
         captureSession.commitConfiguration()
         captureSession.startRunning()
         // Enable the torch if parameter is set and torch is available
